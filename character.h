@@ -2,16 +2,18 @@
 #define COOLGAME_CHARACTER_H
 
 #include <SFML/Graphics.hpp>
+#include <cmath>
+#include "CollisionObjects.h"
 
 using namespace sf;
 
 class Character {
 private:
     float ACCELERATION, VELOCITY_LIMIT;
-    static void constrain(float &value, float min, float max);
+    void constrain(float &value, float min, float max);
 
 public:
-    Character(float x, float y, float w, float h, Texture texture);
+    Character(float x, float y, float w, float h, Texture& texture);
 
     Character(float x, float y, float w, float h, Color color);
 
@@ -30,6 +32,8 @@ public:
     void controls();
 
     void applyForce(Vector2f force);
+
+    void collide(Wall wall);
 
     void update(int loopTimes);
 };
