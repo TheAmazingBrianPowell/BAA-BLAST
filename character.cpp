@@ -1,10 +1,9 @@
 #include "character.h"
-#include <cmath>
 
-Character::Character(float x, float y, float w, float h, Texture texture)
+Character::Character(float x, float y, float w, float h, Texture& texture)
 {
     VELOCITY_LIMIT = 4;
-    ACCELERATION = 0.2;
+    ACCELERATION = 0.4;
     position = Vector2f(x,y);
     shape.setPosition(position);
     width = w;
@@ -12,14 +11,14 @@ Character::Character(float x, float y, float w, float h, Texture texture)
     shape.setSize(Vector2f(width, height));
     shape.setTexture(&texture);
     isAlive = true;
-    jumpTime = -2;
+    jumpTime = -1;
     canJump = false;
 }
 
 Character::Character(float x, float y, float w, float h, Color color)
 {
     VELOCITY_LIMIT = 4;
-    ACCELERATION = 0.2;
+    ACCELERATION = 0.4;
     position = Vector2f(x,y);
     shape.setPosition(position);
     width = w;
@@ -27,16 +26,11 @@ Character::Character(float x, float y, float w, float h, Color color)
     shape.setSize(Vector2f(width, height));
     shape.setFillColor(color);
     isAlive = true;
-    jumpTime = -2;
+    jumpTime = -1;
     canJump = false;
 }
 
-void Character::applyForce(Vector2f force)
-{
-    velocity += force;
-}
-
-void Character::constrain(float &value, float min, float max)
+void Character::constrain(float& value, float min, float max)
 {
     if(value < min)
         value = min;
@@ -47,35 +41,64 @@ void Character::constrain(float &value, float min, float max)
 
 void Character::jump()
 {
-    if(jumpTime == -3)
+    if(jumpTime == -2)
         jumpTime = 5;
 
-    if (jumpTime >= 0)
-        applyForce(Vector2f(0, -jumpTime--));
+    if (jumpTime >= 0) {
+        velocity.y += -jumpTime;
+        jumpTime--;
+    }
 }
 
 void Character::controls()
 {
     if(Keyboard::isKeyPressed(Keyboard::Up) && canJump)
-        jumpTime = -3;
+        jumpTime = -2;
 
     jump();
 
     if (Keyboard::isKeyPressed(Keyboard::Left))
-        applyForce(Vector2f(-ACCELERATION,0));
+        velocity.x += -ACCELERATION;
     else if (Keyboard::isKeyPressed(Keyboard::Right))
-        applyForce(Vector2f(ACCELERATION,0));
+        velocity.x += ACCELERATION;
 
     canJump = false;
 }
 
 void Character::checkGroundCollision()
 {
-    if(position.y + height > 768)
+    if(position.y + height > 760)
     {
         canJump = true;
         velocity.y = 0;
-        position.y = 768 - height;
+        position.y = 760 - height;
+    }
+}
+
+void Character::collide(Wall wall) {
+    if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height) {
+        if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height - 1)
+        {
+            position.y = wall.position.y - height - 0.001;
+            velocity.y = 0;
+            canJump = true;
+        }
+        else if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height)
+        {
+            position.y = wall.position.y + wall.height + 0.001;
+            velocity.y = 0;
+            jumpTime = -1;
+        }
+        if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1)
+        {
+            position.x = wall.position.x - width - 0.001;
+            velocity.x = 0;
+        }
+        else if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1)
+        {
+            position.x = wall.position.x + wall.width + 0.001;
+            velocity.x = 0;
+        }
     }
 }
 
