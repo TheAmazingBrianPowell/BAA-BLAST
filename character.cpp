@@ -1,5 +1,37 @@
 #include "character.h"
 
+
+
+Enemy::Enemy(float x, float y, float w, float h, const Texture& texture)
+{
+    position = Vector2f(x,y);
+    width = w;
+    height = h;
+    shape.setPosition(position);
+    shape.setTexture(texture);
+    isOnBlock = true;
+}
+
+void Enemy::move() {
+    position.x += direction * 1.5;
+}
+
+void Enemy::collide(Wall wall) {
+    if(position.x + width / 1.5 >= wall.position.x && position.x <= wall.position.x + wall.width / 1.5 && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height - 1)
+        isOnBlock = true;
+    if((position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1) || (position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1))
+        direction*=-1;
+}
+
+void Enemy::update() {
+    if(!isOnBlock)
+        direction *= -1;
+    isOnBlock = false;
+    shape.setPosition(position);
+}
+
+
+
 Character::Character(float x, float y, float w, float h, Texture& texture)
 {
     VELOCITY_LIMIT = 4;
@@ -8,24 +40,9 @@ Character::Character(float x, float y, float w, float h, Texture& texture)
     shape.setPosition(position);
     width = w;
     height = h;
-    shape.setSize(Vector2f(width, height));
-    shape.setTexture(&texture);
+    shape.setTexture(texture);
     isAlive = true;
-    jumpTime = -1;
-    canJump = false;
-}
-
-Character::Character(float x, float y, float w, float h, Color color)
-{
-    VELOCITY_LIMIT = 4;
-    ACCELERATION = 0.4;
-    position = Vector2f(x,y);
-    shape.setPosition(position);
-    width = w;
-    height = h;
-    shape.setSize(Vector2f(width, height));
-    shape.setFillColor(color);
-    isAlive = true;
+    lives = 3;
     jumpTime = -1;
     canJump = false;
 }
@@ -65,16 +82,6 @@ void Character::controls()
     canJump = false;
 }
 
-void Character::checkGroundCollision()
-{
-    if(position.y + height > 760)
-    {
-        canJump = true;
-        velocity.y = 0;
-        position.y = 760 - height;
-    }
-}
-
 void Character::collide(Wall wall) {
     if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height) {
         if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height - 1)
@@ -100,6 +107,25 @@ void Character::collide(Wall wall) {
             velocity.x = 0;
         }
     }
+}
+
+void Character::collide(Enemy enemy) {
+    if(position.x + width >= enemy.position.x && position.x <= enemy.position.x + enemy.width && position.y + height >= enemy.position.y && position.y <= enemy.position.y + enemy.height) {
+        isAlive = false;
+    }
+}
+
+void Character::collide(Portal portal, bool& level) {
+    if(position.x + width >= portal.position.x && position.x <= portal.position.x + portal.width && position.y + height >= portal.position.y && position.y <= portal.position.y + portal.height)
+    {
+        level = true;
+    }
+}
+
+bool Character::collide(Sign sign) {
+    /*if(hypot(abs(position.x - sign.position.x, abs(position.y - sign.position.y)) < 26) {
+	
+    }*/
 }
 
 void Character::update(int loopTimes) {
