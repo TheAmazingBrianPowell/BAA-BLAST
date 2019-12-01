@@ -1,4 +1,4 @@
-#include "character.h"
+#include "character.hpp"
 
 
 
@@ -10,6 +10,7 @@ Enemy::Enemy(float x, float y, float w, float h, const Texture& texture)
     shape.setPosition(position);
     shape.setTexture(texture);
     isOnBlock = true;
+    direction = rand() % 2 * 2 - 1;
 }
 
 void Enemy::move() {
@@ -123,9 +124,7 @@ void Character::collide(Portal portal, bool& level) {
 }
 
 bool Character::collide(Sign sign) {
-    /*if(hypot(abs(position.x - sign.position.x, abs(position.y - sign.position.y)) < 26) {
-	
-    }*/
+    return (position.x + width >= sign.position.x && position.x <= sign.position.x + sign.width && position.y + height >= sign.position.y && position.y <= sign.position.y + sign.height);
 }
 
 void Character::update(int loopTimes) {
