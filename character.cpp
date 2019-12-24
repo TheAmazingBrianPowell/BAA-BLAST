@@ -17,10 +17,17 @@ void Enemy::move() {
     position.x += direction * 1.5;
 }
 
-void Enemy::collide(Wall wall) {
+void Enemy::collide(Wall& wall) {
     if(position.x + width / 1.5 >= wall.position.x && position.x <= wall.position.x + wall.width / 1.5 && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height - 1)
         isOnBlock = true;
     if((position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1) || (position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1))
+        direction*=-1;
+}
+
+void Enemy::collide(Jump& jump) {
+    if(position.x + width / 1.5 >= jump.position.x && position.x <= jump.position.x + jump.width / 1.5 && position.y + height + 16 >= jump.position.y && position.y <= jump.position.y + jump.height + 15)
+        isOnBlock = true;
+    if((position.x + width >= jump.position.x && position.x <= jump.position.x + jump.width - 1 && position.y + height >= jump.position.y + 1 && position.y <= jump.position.y + jump.height + 15) || (position.x + width >= jump.position.x + 1 && position.x <= jump.position.x + jump.width && position.y + height >= jump.position.y + 1 && position.y <= jump.position.y + jump.height + 15))
         direction*=-1;
 }
 
@@ -83,7 +90,11 @@ void Character::controls()
     canJump = false;
 }
 
-void Character::collide(Wall wall) {
+bool Character::collide(Coin& coin) {
+return position.x + width >= coin.position.x && position.x <= coin.position.x + coin.width && position.y + height >= coin.position.y && position.y <= coin.position.y + coin.height; 
+}
+
+void Character::collide(Wall& wall) {
     if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height) {
         if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height - 1)
         {
@@ -110,20 +121,50 @@ void Character::collide(Wall wall) {
     }
 }
 
-void Character::collide(Enemy enemy) {
+void Character::collide(Jump& jump) {
+if(position.x + width >= jump.position.x && position.x <= jump.position.x + jump.width && position.y + height >= jump.position.y && position.y <= jump.position.y + jump.height) {
+        if(position.x + width >= jump.position.x + 1 && position.x <= jump.position.x + jump.width - 1 && position.y + height >= jump.position.y && position.y <= jump.position.y + jump.height - 1)
+        {
+            jumpTime = 15;
+	    velocity.y = 0;
+	    position.y = jump.position.y - height - 16.001;
+            jump.shape.setTexture(*jump.secondTexture, true);
+	    jump.shape.setPosition(jump.originalPos.x, jump.originalPos.y - 16);
+        }
+        else if(position.x + width >= jump.position.x + 1 && position.x <= jump.position.x + jump.width - 1 && position.y + height >= jump.position.y + 1 && position.y <= jump.position.y + jump.height)
+        {
+            position.y = jump.position.y + jump.height + 0.001;
+            velocity.y = 0;
+            jumpTime = -1;
+        }
+        if(position.x + width >= jump.position.x && position.x <= jump.position.x + jump.width - 1 && position.y + height >= jump.position.y + 1 && position.y <= jump.position.y + jump.height - 1)
+        {
+            position.x = jump.position.x - width - 0.001;
+            velocity.x = 0;
+        }
+        else if(position.x + width >= jump.position.x + 1 && position.x <= jump.position.x + jump.width && position.y + height >= jump.position.y + 1 && position.y <= jump.position.y + jump.height - 1)
+        {
+            position.x = jump.position.x + jump.width + 0.001;
+            velocity.x = 0;
+        }
+    }
+}
+
+
+void Character::collide(Enemy& enemy) {
     if(position.x + width >= enemy.position.x && position.x <= enemy.position.x + enemy.width && position.y + height >= enemy.position.y && position.y <= enemy.position.y + enemy.height) {
         isAlive = false;
     }
 }
 
-void Character::collide(Portal portal, bool& level) {
+void Character::collide(Portal& portal, bool& level) {
     if(position.x + width >= portal.position.x && position.x <= portal.position.x + portal.width && position.y + height >= portal.position.y && position.y <= portal.position.y + portal.height)
     {
         level = true;
     }
 }
 
-bool Character::collide(Sign sign) {
+bool Character::collide(Sign& sign) {
     return (position.x + width >= sign.position.x && position.x <= sign.position.x + sign.width && position.y + height >= sign.position.y && position.y <= sign.position.y + sign.height);
 }
 
