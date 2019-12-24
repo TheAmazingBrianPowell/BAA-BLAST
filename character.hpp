@@ -23,7 +23,8 @@ public:
 
     void move();
 
-    void collide(Wall wall);
+    void collide(Wall& wall);
+    void collide(Jump& jump);
 
     void update();
 };
@@ -51,13 +52,17 @@ public:
 
     void controls();
 
-    void collide(Wall wall);
+    void collide(Wall& wall);
 
-    void collide(Enemy enemy);
+    void collide(Enemy& enemy);
 
-    void collide(Portal portal, bool& level);
+    void collide(Jump& jump);
 
-    bool collide(Sign sign);
+    bool collide(Coin& coin);
+
+    void collide(Portal& portal, bool& level);
+
+    bool collide(Sign& sign);
 
     void update(int loopTimes);
 };
