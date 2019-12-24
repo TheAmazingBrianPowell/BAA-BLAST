@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
-extern const String letters[52][20];
+extern const String letters[62][20];
 
-void text(String characters, int x, int y, int size, RenderWindow& window);
+void text(String characters, int x, int y, double size, RenderWindow& window);
 #endif
