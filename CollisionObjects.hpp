@@ -10,7 +10,6 @@ public:
     Vector2f position;
     float width, height;
     CollisionObject(float x, float y, float w, float h, const Texture& texture);
-    CollisionObject(float x, float y, float w, float h, Color color);
     CollisionObject(float x, float y, float w, float h);
     Sprite shape;
 };
@@ -18,22 +17,35 @@ public:
 class Wall : public CollisionObject {
 public:
     Wall(float x, float y, float w, float h, const Texture& texture);
-    Wall(float x, float y, float w, float h, Color color);
     Wall(float x, float y, float w, float h);
 };
 
 class Portal : public CollisionObject{
 public:
     Portal(float x, float y, float w, float h, const Texture& texture);
-    Portal(float x, float y, float w, float h, Color color);
-    Portal(float x, float y, float w, float h);
 };
 
 class Sign : public CollisionObject {
 public:
     Sign(float x, float y, float w, float h, const Texture& texture);
-    Sign(float x, float y, float w, float h, Color color);
-    Sign(float x, float y, float w, float h);
+};
+
+class Coin : public CollisionObject {
+public:
+    Coin(float x, float y, float w, float h, const Texture& texture);
+    void rotate();
+private:
+    bool rotateDirection;
+    float rotation;
+};
+
+class Jump : public CollisionObject {
+public:
+    Jump(float x, float y, float w, float h, const Texture& texture, const Texture& texture2);
+   const Texture* firstTexture;
+   const Texture* secondTexture;
+   Vector2f originalPos;
+   int springTimer;
 };
 
 #endif
