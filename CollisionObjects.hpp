@@ -2,6 +2,8 @@
 #define COOLGAME_COLLISION_OBJECTS_HPP
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <math.h> 
 
 using namespace sf;
 
@@ -32,7 +34,9 @@ public:
 
 class Coin : public CollisionObject {
 public:
+    Sprite shape2;
     Coin(float x, float y, float w, float h, const Texture& texture);
+    Coin(float x, float y, float w, float h, const Texture& texture, const Texture& texture2);
     void rotate();
 private:
     bool rotateDirection;
