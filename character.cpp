@@ -91,7 +91,7 @@ void Character::controls()
 }
 
 bool Character::collide(Coin& coin) {
-return position.x + width >= coin.position.x && position.x <= coin.position.x + coin.width && position.y + height >= coin.position.y && position.y <= coin.position.y + coin.height; 
+return position.x + width >= coin.shape.getGlobalBounds().left && position.x <= coin.shape.getGlobalBounds().left + coin.shape.getGlobalBounds().width && position.y + height >= coin.shape.getGlobalBounds().top && position.y <= coin.shape.getGlobalBounds().top + coin.shape.getGlobalBounds().height; 
 }
 
 void Character::collide(Wall& wall) {
