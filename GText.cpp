@@ -1,6 +1,6 @@
 #include "GText.hpp"
 #include <iostream>
-const String letters [62][20] = {
+const String letters [64][20] = {
 {
     "    00",
     "    00",
@@ -1084,31 +1084,79 @@ const String letters [62][20] = {
     "         0",
     "         0"
 },
+{
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "00",
+    "00"
+},
+{
+    "00000",
+    "0   0000",
+    "       000",
+    "         00",
+    "          0",
+    "          0",
+    "         00",
+    "       000",
+    "    0000",
+    " 0000",
+    " 00",
+    " 00",
+    "",
+    " 00",
+    " 00"
+},
 };
-void text(String characters, int x, int y, double size, RenderWindow& window) {
+Vector2f text(String characters, float x, float y, int size2, RenderWindow& window) {
     int yValue = 0;
     int currentPoint = 0;
     for(int i = 0; i < characters.getSize(); i++) {
 	int greatestPoint = 0;
-	if((int)characters[i] == 47) {
+	if((int)characters[i] == '/') {
 	    yValue += 22;
 	    currentPoint = 0;
-	}else if((int)characters[i] == 32) {
-	    currentPoint += 4;
+	}else if((int)characters[i] == ' ') {
+	    greatestPoint = 4;
+	}else if((int)characters[i] == '?') {
+	    for(int y2 = 0; y2 < 15; y2++) {
+		for(int x2 = 0; x2 < letters[63][y2].getSize(); x2++) {
+		    if(letters[63][y2][x2] == '0') {
+		        if(greatestPoint < x2) greatestPoint = x2;
+		        RectangleShape thing;
+		        thing.setPosition(x + x2 * size2 + currentPoint * size2, y + y2 * size2 + yValue);
+		        thing.setSize(Vector2f(size2,size2));
+		        thing.setFillColor(Color::White);
+		        window.draw(thing);
+		    }
+		}
+	    }
 	} else {
             for(int y2 = 0; y2 < 20; y2++) {
-	        for(int x2 = 0; x2 < letters[(int)characters[i] - (((int)characters[i] > 96) ? 71 : (((int)characters[i] < 58) ? -4 : 65))][y2].getSize(); x2++) {
-                    if(letters[(int)characters[i] - (((int)characters[i] > 96) ? 71 : (((int)characters[i] < 58) ? -4 : 65))][y2][x2] == '0') {
-		        if(greatestPoint < x2) greatestPoint = x2;
-	                RectangleShape thing;
-		        thing.setPosition(x + x2 * size + currentPoint * size, y + y2 * size + yValue);
-	                thing.setSize(Vector2f(size,size));
+	        for(int x2 = 0; x2 < letters[(int)characters[i] - ((int)characters[i] == 46 ? -16 :((int)characters[i] > 96 ? 71 : ((int)characters[i] < 58 ? -4 : 65)))][y2].getSize(); x2++) {
+                    if(letters[(int)characters[i] - ((int)characters[i] == 46 ? -16 :((int)characters[i] > 96 ? 71 : ((int)characters[i] < 58 ? -4 : 65)))][y2][x2] == '0') {
+	                if(greatestPoint < x2) greatestPoint = x2;
+			RectangleShape thing;
+		        thing.setPosition(x + x2 * size2 + currentPoint * size2, y + y2 * size2 + yValue);
+	                thing.setSize(Vector2f(size2,size2));
 		        thing.setFillColor(Color::White);
-	                window.draw(thing);
+			window.draw(thing);
 		    }
 	        }
             }
 	}
        currentPoint += greatestPoint + 4;
     }
+    return Vector2f(currentPoint - 4, yValue + 20);
 }
