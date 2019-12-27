@@ -23,18 +23,28 @@ Portal::Portal(float x, float y, float w, float h, const Texture& texture) : Col
 
 Sign::Sign(float x, float y, float w, float h, const Texture& texture) : CollisionObject(x, y, w, h, texture) {}
 
-Coin::Coin(float x, float y, float w, float h, const Texture& texture) : CollisionObject(x, y, w, h, texture) {
-    rotation = 1;
+Coin::Coin(float x, float y, float w, float h, const Texture& texture) : CollisionObject(x + 13, y, w, h, texture) {
+    rotation = (float)(rand() % 11 - 5) / 5;
     rotateDirection = true;
 }
 
+Coin::Coin(float x, float y, float w, float h, const Texture& texture, const Texture& texture2) : CollisionObject(x + 13, y, w, h, texture) {
+    rotation = (float)(rand() % 11 - 5) / 5;
+    rotateDirection = true;
+    shape2.setTexture(texture2);
+    shape2.setPosition(position - Vector2f(13,0));
+}
+
 void Coin::rotate() {
+    if(rotation <= 0) {
+	shape.setPosition(position.x + shape.getGlobalBounds().width / 2, shape.getPosition().y);
+    } else {
+	shape.setPosition(position.x - shape.getGlobalBounds().width / 2, shape.getPosition().y);
+    }
     if(rotateDirection) {
     	rotation -= 0.05;
-	shape.setPosition(shape.getPosition().x + 0.5, shape.getPosition().y);
     } else {
 	rotation += 0.05;
-	shape.setPosition(shape.getPosition().x - 0.5, shape.getPosition().y);
     }
     if(rotation <= -1) {
     	rotateDirection = false;
@@ -42,7 +52,7 @@ void Coin::rotate() {
     if(rotation >= 1) {
     	rotateDirection = true;
     }
-    shape.setScale(rotation, 1);
+    shape.setScale(sin(M_PI * rotation * 0.5), 1);
 }
 
 Jump::Jump(float x, float y, float w, float h, const Texture& texture, const Texture& texture2) : CollisionObject(x,y,w,h,texture) {
