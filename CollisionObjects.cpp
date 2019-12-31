@@ -16,30 +16,87 @@ CollisionObject::CollisionObject(float x, float y, float w, float h)
     position = Vector2f(x,y);
 }
 
+Elevator::Elevator(float x, float y, float w, float h, const Texture& texture) : CollisionObject(x, y, w, h, texture) {
+    direction = rand() % 2 * 2 - 1;
+    waitTimer = 0;
+}
+void Elevator::move() {
+    if(waitTimer == 0) {
+        position.x += direction * 1.5;
+        shape.setPosition(position);
+    }
+    if(waitTimer != 0) {
+        waitTimer++;
+    }
+    if(waitTimer >= 100) {
+	waitTimer = 0;
+    }
+}
+
+void Elevator::collide(Wall& wall) {
+    if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height) 
+    {
+        if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1.5 && position.y + height >= wall.position.y + 1.5 && position.y <= wall.position.y + wall.height - 1.5)
+        {
+            position.x = wall.position.x - width - 1.5;
+	    direction = -1;
+	    waitTimer++;
+        }
+         if(position.x + width >= wall.position.x + 1.5 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 1.5 && position.y <= wall.position.y + wall.height - 1.5)
+        {
+            position.x = wall.position.x + wall.width + 1.5;
+	    direction = 1;
+	    waitTimer++;
+        }
+    }
+}
+
 Wall::Wall(float x, float y, float w, float h, const Texture& texture) : CollisionObject(x, y, w, h, texture) {}
+
 Wall::Wall(float x, float y, float w, float h) : CollisionObject(x, y, w, h) {}
+
+Board::Board(float x, float y, float w, float h, const Texture& texture) : CollisionObject(x, y, w, h, texture) {
+    timerThing = 255;
+    startTimer = false;
+}
+
+void Board::runTimer() {
+    if(startTimer) {
+	shape.setColor(Color(255,255,255,timerThing-=5));
+    }
+    if(timerThing <= 0) {
+	startTimer = false;
+	timerThing--;
+	shape.setColor(Color(255,255,255,0));
+    }
+    if(timerThing <= -400) {
+	timerThing = 255;
+	shape.setColor(Color(255,255,255,255));
+    }
+}
 
 Portal::Portal(float x, float y, float w, float h, const Texture& texture) : CollisionObject(x, y, w, h, texture) {}
 
 Sign::Sign(float x, float y, float w, float h, const Texture& texture) : CollisionObject(x, y, w, h, texture) {}
 
-Coin::Coin(float x, float y, float w, float h, const Texture& texture) : CollisionObject(x + 13, y, w, h, texture) {
+Coin::Coin(float x, float y, float w, float h, const Texture& texture) : CollisionObject(x, y, w, h, texture) {
     rotation = (float)(rand() % 11 - 5) / 5;
     rotateDirection = true;
+    position2 = Vector2f(x + 13, y);
 }
 
-Coin::Coin(float x, float y, float w, float h, const Texture& texture, const Texture& texture2) : CollisionObject(x + 13, y, w, h, texture) {
+Coin::Coin(float x, float y, float w, float h, const Texture& texture, const Texture& texture2) : CollisionObject(x, y, w, h, texture) {
     rotation = (float)(rand() % 11 - 5) / 5;
     rotateDirection = true;
     shape2.setTexture(texture2);
-    shape2.setPosition(position - Vector2f(13,0));
+    position2 = Vector2f(x + 13, y);
 }
 
 void Coin::rotate() {
     if(rotation <= 0) {
-	shape.setPosition(position.x + shape.getGlobalBounds().width / 2, shape.getPosition().y);
+	shape.setPosition(position2.x + shape.getGlobalBounds().width / 2, shape.getPosition().y);
     } else {
-	shape.setPosition(position.x - shape.getGlobalBounds().width / 2, shape.getPosition().y);
+	shape.setPosition(position2.x - shape.getGlobalBounds().width / 2, shape.getPosition().y);
     }
     if(rotateDirection) {
     	rotation -= 0.05;

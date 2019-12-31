@@ -24,6 +24,13 @@ void Enemy::collide(Wall& wall) {
         direction*=-1;
 }
 
+void Enemy::collide(Board& wall) {
+    if(position.x + width / 1.5 >= wall.position.x && position.x <= wall.position.x + wall.width / 1.5 && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height - 1)
+        isOnBlock = true;
+    if((position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1) || (position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1))
+        direction*=-1;
+}
+
 void Enemy::collide(Jump& jump) {
     if(position.x + width / 1.5 >= jump.position.x && position.x <= jump.position.x + jump.width / 1.5 && position.y + height + 16 >= jump.position.y && position.y <= jump.position.y + jump.height + 15)
         isOnBlock = true;
@@ -32,8 +39,7 @@ void Enemy::collide(Jump& jump) {
 }
 
 void Enemy::update() {
-    if(!isOnBlock)
-        direction *= -1;
+    if(!isOnBlock) direction *= -1;
     isOnBlock = false;
     shape.setPosition(position);
 }
@@ -121,6 +127,61 @@ void Character::collide(Wall& wall) {
     }
 }
 
+void Character::collide(Elevator& wall) {
+    if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height) {
+        if(wall.waitTimer == 0) velocity.x = wall.direction * 1.5;
+        if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height - 1)
+        {
+            position.y = wall.position.y - height - 0.001;
+            velocity.y = 0;
+            canJump = true;
+        } else if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height)
+        {
+            position.y = wall.position.y + wall.height + 0.001;
+            velocity.y = 0;
+            jumpTime = -1;
+        }
+        if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1)
+        {
+            position.x = wall.position.x - width - 1;
+            velocity.x = 0;
+        }
+        else if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1)
+        {
+	    position.x = wall.position.x + wall.width + 1;
+            velocity.x = 0;
+        }
+    }
+}
+
+void Character::collide(Board& wall) {
+    if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height && wall.shape.getColor() != Color(255,255,255,0)) {
+	wall.startTimer = true;
+        if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height - 1)
+        {
+            position.y = wall.position.y - height - 0.001;
+            velocity.y = 0;
+            canJump = true;
+        }
+        else if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height)
+        {
+            position.y = wall.position.y + wall.height + 0.001;
+            velocity.y = 0;
+            jumpTime = -1;
+        }
+        if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1)
+        {
+            position.x = wall.position.x - width - 0.001;
+            velocity.x = 0;
+        }
+        else if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1)
+        {
+            position.x = wall.position.x + wall.width + 0.001;
+            velocity.x = 0;
+        }
+    }
+}
+
 void Character::collide(Jump& jump) {
 if(position.x + width >= jump.position.x && position.x <= jump.position.x + jump.width && position.y + height >= jump.position.y && position.y <= jump.position.y + jump.height) {
         if(position.x + width >= jump.position.x + 1 && position.x <= jump.position.x + jump.width - 1 && position.y + height >= jump.position.y && position.y <= jump.position.y + jump.height - 1)
@@ -157,11 +218,12 @@ void Character::collide(Enemy& enemy) {
     }
 }
 
-void Character::collide(Portal& portal, bool& level) {
+bool Character::collide(Portal& portal) {
     if(position.x + width >= portal.position.x && position.x <= portal.position.x + portal.width && position.y + height >= portal.position.y && position.y <= portal.position.y + portal.height)
     {
-        level = true;
+        return true;
     }
+    return false;
 }
 
 bool Character::collide(Sign& sign) {

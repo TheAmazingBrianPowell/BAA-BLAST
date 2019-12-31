@@ -24,6 +24,7 @@ public:
     void move();
 
     void collide(Wall& wall);
+    void collide(Board& wall);
     void collide(Jump& jump);
 
     void update();
@@ -54,13 +55,17 @@ public:
 
     void collide(Wall& wall);
 
+    void collide(Elevator& wall);
+
+    void collide(Board& wall);
+
     void collide(Enemy& enemy);
 
     void collide(Jump& jump);
 
     bool collide(Coin& coin);
 
-    void collide(Portal& portal, bool& level);
+    bool collide(Portal& portal);
 
     bool collide(Sign& sign);
 

@@ -22,6 +22,24 @@ public:
     Wall(float x, float y, float w, float h);
 };
 
+class Elevator : public CollisionObject {
+public:
+    Elevator(float x, float y, float w, float h, const Texture& texture);
+    void move();
+    void collide(Wall& wall);
+    int direction;
+    int waitTimer;
+};
+
+class Board : public CollisionObject {
+public:
+    Board(float x, float y, float w, float h, const Texture& texture);
+    bool startTimer;
+    void runTimer();
+private:
+    int timerThing;
+};
+
 class Portal : public CollisionObject{
 public:
     Portal(float x, float y, float w, float h, const Texture& texture);
@@ -41,6 +59,7 @@ public:
 private:
     bool rotateDirection;
     float rotation;
+    Vector2f position2;
 };
 
 class Jump : public CollisionObject {
