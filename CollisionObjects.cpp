@@ -20,13 +20,13 @@ Elevator::Elevator(float x, float y, float w, float h, const Texture& texture) :
     direction = rand() % 2 * 2 - 1;
     waitTimer = 0;
 }
-void Elevator::move() {
+void Elevator::move(float numLoops) {
     if(waitTimer == 0) {
-        position.x += direction * 1.5;
+        position.x += ((float)direction * 1.5 / numLoops);
         shape.setPosition(position);
     }
     if(waitTimer != 0) {
-        waitTimer++;
+        waitTimer += 1.f / numLoops;
     }
     if(waitTimer >= 100) {
 	waitTimer = 0;

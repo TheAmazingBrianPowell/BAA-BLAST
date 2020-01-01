@@ -20,8 +20,14 @@ void Enemy::move() {
 void Enemy::collide(Wall& wall) {
     if(position.x + width / 1.5 >= wall.position.x && position.x <= wall.position.x + wall.width / 1.5 && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height - 1)
         isOnBlock = true;
-    if((position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1) || (position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1))
-        direction*=-1;
+    if(position.x + width >= wall.position.x + 2 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 2 && position.y <= wall.position.y + wall.height - 2) {
+	position.x = wall.position.x + wall.width + 2;
+	direction *= -1;
+    }
+    if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 2 && position.y + height >= wall.position.y + 2 && position.y <= wall.position.y + wall.height - 2) {
+	position.x = wall.position.x - width - 2;
+	direction *= -1;
+    }
 }
 
 void Enemy::collide(Board& wall) {
@@ -141,15 +147,17 @@ void Character::collide(Elevator& wall) {
             velocity.y = 0;
             jumpTime = -1;
         }
-        if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1)
+        else if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1 && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1)
         {
-            position.x = wall.position.x - width - 1;
-            velocity.x = 0;
+	    wall.position.x = position.x + width + 1;
+            position.x = wall.position.x - width - 2;
+	    velocity.x = 0;
         }
         else if(position.x + width >= wall.position.x + 1 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 1 && position.y <= wall.position.y + wall.height - 1)
         {
-	    position.x = wall.position.x + wall.width + 1;
-            velocity.x = 0;
+	    wall.position.x = position.x - wall.width - 1;
+	    position.x = wall.position.x + wall.width + 2;
+	    velocity.x = 0;
         }
     }
 }
@@ -233,7 +241,7 @@ bool Character::collide(Sign& sign) {
 void Character::update(int loopTimes) {
     constrain(velocity.x, -VELOCITY_LIMIT, VELOCITY_LIMIT);
     constrain(velocity.y, -7, 7);
-    position += velocity / (float) loopTimes;
+    position += velocity / (float)loopTimes;
     shape.setPosition(position);
     if (!Keyboard::isKeyPressed(Keyboard::Left) && !Keyboard::isKeyPressed(Keyboard::Right))
         velocity.x *= pow(0.9, 1.f / loopTimes);

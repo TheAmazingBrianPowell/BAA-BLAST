@@ -1,9 +1,14 @@
 //TODO: 
+//Animation for movement
+//Make main menu
 //Make story
 //Make level maps
+//More wall textures
 //Make background texture
 //Make sounds
 //Level Creator?
+//Crates?
+//Disappearing blocks?
 
 
 #include <SFML/Graphics.hpp>
@@ -83,11 +88,11 @@ int main()
             },
 	{
 		"0000    ",
-		"0# 00000",
-		"0E     0",
+		"0  00  0",
+		"0E     0 E    #    0",
 		"0  0000000000000000        0                                                        0E                            @0",
-		"0  0                       0                                                         0             ",
-		"0  0    0000000            0                                                          0      ",
+		"0  0                0      0                                                         0             ",
+		"0  0    0000000000000      0                                                          0      ",
 		"0  0   0      0            0                                                          0000000",
 		"0  0   0  0010 E     E     E          E         E        E       E        E     E       2",
 		"0  00     01110   !                                                  0 0              0",
@@ -108,7 +113,7 @@ int main()
 		" 00            --------E           --------000000000000011100111110110 0                       ",
 		" 00                                                   1110000011110000 0         E             0",
 		"0 E      E        E       E       E       E0          1100111001     0 0                       ",
-		" 00                                        000 00000100001111100                                0",
+		" 00                                        000 00000100001111100                                 0",
 		" 00                                          0 1 0 1  1 11111111                               ",
 		" 00                                          0----------0000000000000000 E                    E0",
 	},
@@ -703,13 +708,16 @@ int main()
                 enemy.move();
             }
             //check for collisions
-            for(int checkCollisions = 0; checkCollisions < round(abs(hypot(player.velocity.x, player.velocity.y)) + 0.5); checkCollisions++)
+	    int numLoops = round(abs(hypot(player.velocity.x, player.velocity.y)) + 0.5);
+            for(int checkCollisions = 0; checkCollisions < numLoops; checkCollisions++)
             {
 		for(int i = 0; i < 3; i++) {
 		    for(Elevator& elevator : elevators) {
+			elevator.move(numLoops*3);
 			player.collide(elevator);
-	            }
+		    }
 		}
+		numLoops = round(abs(hypot(player.velocity.x, player.velocity.y)) + 0.5);
 	        for(Portal& portal : portals) {
 		    if(player.collide(portal)) {
 			levelIsChanging = true;
@@ -757,10 +765,9 @@ int main()
                 }
 
                 //update the player's location
-                player.update(round(abs(hypot(player.velocity.x, player.velocity.y)) + 0.5));
+                player.update(numLoops);
             }
 	}
-
         //update location of the background images
         if(translate.x > background.getPosition().x + windowWidth * 1.5) {
             background.setPosition(background2.getPosition().x + windowWidth,0);
@@ -804,8 +811,7 @@ int main()
 	    for(Wall &wall : wallsI) {
 		elevator.collide(wall);
 	    }
-	    if(fadeTimer >= 510) elevator.move();
-	    else elevator.shape.setPosition(elevator.position);
+	    if(fadeTimer < 510) elevator.shape.setPosition(elevator.position);
 	    window.draw(elevator.shape);
 	}
 
@@ -1139,12 +1145,12 @@ int main()
 
 
         //translate view
-        if(player.position.x > 120 + translate.x && player.velocity.x > 0 && !isQuestioning && level >= 0)
+        if(player.position.x > 120 + translate.x && !isQuestioning && level >= 0)
         {
             translate.x = player.position.x - 120;
             main.setCenter(translate);
         }
-	if(player.position.x < translate.x - 100 && player.velocity.x < 0 && !isQuestioning && level >= 0)
+	if(player.position.x < translate.x - 100 && !isQuestioning && level >= 0)
 	{
             translate.x = player.position.x + 100;
             main.setCenter(translate);

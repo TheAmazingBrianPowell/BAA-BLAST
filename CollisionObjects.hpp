@@ -25,10 +25,10 @@ public:
 class Elevator : public CollisionObject {
 public:
     Elevator(float x, float y, float w, float h, const Texture& texture);
-    void move();
+    void move(float numLoops);
     void collide(Wall& wall);
     int direction;
-    int waitTimer;
+    float waitTimer;
 };
 
 class Board : public CollisionObject {
