@@ -1,6 +1,6 @@
 #include "GText.hpp"
 #include <iostream>
-const String letters [64][20] = {
+const String letters [66][20] = {
 {
     "    00",
     "    00",
@@ -1118,6 +1118,32 @@ const String letters [64][20] = {
     " 00",
     " 00"
 },
+{
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "   00",
+    "   00",
+    "  00",
+    " 00",
+    "0"
+},
+{
+    "  00",
+    "  00",
+    " 00",
+    "0"
+}
 };
 Vector2f text(String characters, float x, float y, int size2, RenderWindow& window) {
     int yValue = 0;
@@ -1129,6 +1155,32 @@ Vector2f text(String characters, float x, float y, int size2, RenderWindow& wind
 	    currentPoint = 0;
 	}else if((int)characters[i] == ' ') {
 	    greatestPoint = 4;
+	}else if((int)characters[i] == '\'') {
+	    for(int y2 = 0; y2 < 15; y2++) {
+		for(int x2 = 0; x2 < letters[65][y2].getSize(); x2++) {
+		    if(letters[65][y2][x2] == '0') {
+		        if(greatestPoint < x2) greatestPoint = x2;
+		        RectangleShape thing;
+		        thing.setPosition(x + x2 * size2 + currentPoint * size2, y + y2 * size2 + yValue);
+		        thing.setSize(Vector2f(size2,size2));
+		        thing.setFillColor(Color::White);
+		        window.draw(thing);
+		    }
+		}
+	    }
+	}else if((int)characters[i] == ',') {
+	    for(int y2 = 0; y2 < 18; y2++) {
+		for(int x2 = 0; x2 < letters[64][y2].getSize(); x2++) {
+		    if(letters[64][y2][x2] == '0') {
+		        if(greatestPoint < x2) greatestPoint = x2;
+		        RectangleShape thing;
+		        thing.setPosition(x + x2 * size2 + currentPoint * size2, y + y2 * size2 + yValue);
+		        thing.setSize(Vector2f(size2,size2));
+		        thing.setFillColor(Color::White);
+		        window.draw(thing);
+		    }
+		}
+	    }
 	}else if((int)characters[i] == '?') {
 	    for(int y2 = 0; y2 < 15; y2++) {
 		for(int x2 = 0; x2 < letters[63][y2].getSize(); x2++) {
