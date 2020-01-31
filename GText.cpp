@@ -1145,7 +1145,7 @@ const String letters [66][20] = {
     "0"
 }
 };
-Vector2f text(String characters, float x, float y, int size2, RenderWindow& window) {
+Vector2f text(String characters, float x, float y, int size2, RenderWindow& window, Color color) {
     int yValue = 0;
     int currentPoint = 0;
     for(int i = 0; i < characters.getSize(); i++) {
@@ -1163,7 +1163,7 @@ Vector2f text(String characters, float x, float y, int size2, RenderWindow& wind
 		        RectangleShape thing;
 		        thing.setPosition(x + x2 * size2 + currentPoint * size2, y + y2 * size2 + yValue);
 		        thing.setSize(Vector2f(size2,size2));
-		        thing.setFillColor(Color::White);
+		        thing.setFillColor(color);
 		        window.draw(thing);
 		    }
 		}
@@ -1176,7 +1176,7 @@ Vector2f text(String characters, float x, float y, int size2, RenderWindow& wind
 		        RectangleShape thing;
 		        thing.setPosition(x + x2 * size2 + currentPoint * size2, y + y2 * size2 + yValue);
 		        thing.setSize(Vector2f(size2,size2));
-		        thing.setFillColor(Color::White);
+		        thing.setFillColor(color);
 		        window.draw(thing);
 		    }
 		}
@@ -1189,7 +1189,7 @@ Vector2f text(String characters, float x, float y, int size2, RenderWindow& wind
 		        RectangleShape thing;
 		        thing.setPosition(x + x2 * size2 + currentPoint * size2, y + y2 * size2 + yValue);
 		        thing.setSize(Vector2f(size2,size2));
-		        thing.setFillColor(Color::White);
+		        thing.setFillColor(color);
 		        window.draw(thing);
 		    }
 		}
@@ -1202,7 +1202,7 @@ Vector2f text(String characters, float x, float y, int size2, RenderWindow& wind
 			RectangleShape thing;
 		        thing.setPosition(x + x2 * size2 + currentPoint * size2, y + y2 * size2 + yValue);
 	                thing.setSize(Vector2f(size2,size2));
-		        thing.setFillColor(Color::White);
+		        thing.setFillColor(color);
 			window.draw(thing);
 		    }
 	        }

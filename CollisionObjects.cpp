@@ -36,13 +36,13 @@ void Elevator::move(float numLoops) {
 void Elevator::collide(Wall& wall) {
     if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y && position.y <= wall.position.y + wall.height) 
     {
-        if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 1.5 && position.y + height >= wall.position.y + 1.5 && position.y <= wall.position.y + wall.height - 1.5)
+        if(position.x + width >= wall.position.x && position.x <= wall.position.x + wall.width - 3 && position.y + height >= wall.position.y + 3 && position.y <= wall.position.y + wall.height - 3)
         {
             position.x = wall.position.x - width - 1.5;
 	    direction = -1;
 	    waitTimer++;
         }
-         if(position.x + width >= wall.position.x + 1.5 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 1.5 && position.y <= wall.position.y + wall.height - 1.5)
+         if(position.x + width >= wall.position.x + 3 && position.x <= wall.position.x + wall.width && position.y + height >= wall.position.y + 3 && position.y <= wall.position.y + wall.height - 3)
         {
             position.x = wall.position.x + wall.width + 1.5;
 	    direction = 1;

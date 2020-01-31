@@ -89,14 +89,14 @@ void Character::jump()
 
 void Character::controls()
 {
-    if(Keyboard::isKeyPressed(Keyboard::Up) && canJump)
+    if((Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) && canJump)
         jumpTime = -2;
 
     jump();
 
-    if (Keyboard::isKeyPressed(Keyboard::Left))
+    if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
         velocity.x += -ACCELERATION;
-    else if (Keyboard::isKeyPressed(Keyboard::Right))
+    else if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
         velocity.x += ACCELERATION;
 
     canJump = false;
