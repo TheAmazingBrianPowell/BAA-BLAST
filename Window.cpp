@@ -173,35 +173,35 @@ int main()
 		"                                               0     000 0         000                             ----------"
 	},
 	{
-		"#",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-		"@"
+		"     001000        0000000000                                                                               0 ",
+		"     0111100       0#       0                                                                               0  ",
+		"     01111100      00     0 0                                                                            0   0",
+		"     011111100     000  000 0                                                                           0    0",
+		"                  11*0  0   0                                                                         ! 0    0",
+		"                 00010 !0 000                                                                      00000     0",
+		"                000010$00 0                                                                                   0",
+		"        0 0    00000*0    0                                                                      0             0",
+		"   E   ! ! !       010000 00                                                                     0             01",
+		"0     0000000      0    0 0                                                                     0               01",
+		" 0                 0  000 000                                                                   0              $0*1",
+		"  0                0  0     0                                                                  0              00001",
+		"   001000001000    0  0  -  0                                                                                    0*",
+		"     !         00  0  0  !  0                                                                 0                   0",
+		"     0             0  0  0  0                                                                                     0",
+		"                  00  0  0  0                                                               0                      0",
+		"                   0  0  0  0                                                             0                        0",
+		"      0          000  0  0 00000                                                          0                         0",
+		"            !  !   0     0      0                                                        0                          0",
+		"    0    00000000000    !-    0  0                                                       0                          0",
+		"          0*11111100000000  00 0  0                 !                                   0                           0",
+		" 0        0*    111111110   0   0  011111111111    0000                                 0                           0",
+		"          0000100000*1110   0    0 000011110000   1   000000                           0",
+		"                   0011*0   0    0          000  0    01111100000                      0",
+		"                   01110  000    0E           000     11111111110                     0",
+		"     !             0010  0       0111111111111000110000*111111110  ! ! ! ! ! ! ! ! ! !                                        E0",
+		"0^-----  E    000       0                             000000000100000000000000000000000",
+		"0                0     0                                      0@  ",
+		"                  00000                                       0000---------------------                                       E0"
 	},
     };
 
@@ -1266,7 +1266,7 @@ int main()
 		if(scores[7] != 0) {
 		    text("x" + to_string(scores[6]),841,537,1,window);
 		    text(to_string(scores[7]), 916,537,1,window);
-		    text("out of 20 coins", 805, 560, 1, window);
+		    text("out of 11 coins", 805, 560, 1, window);
 		    window.draw(Coin(816, 530, gridSize, gridSize,coinTexture).shape);
 		    RectangleShape clockThing(Vector2f(26,26));
 		    clockThing.setTexture(&clock);
@@ -1334,7 +1334,7 @@ int main()
 	    text(out.str(), (time.getElapsedTime().asSeconds() + time2add <= 10 ? translate.x - 400 : (time.getElapsedTime().asSeconds() + time2add <= 100 ? translate.x - 420 : translate.x - 440)), 5, 1, window);
 	    text("SECONDS", translate.x - 350, 5, 1, window);
 	    text(to_string(player.lives) + " LI" + (player.lives == 1 ? "FE" : "VES"), translate.x - 200,5,1,window);
-	    text(to_string(coinAmount) + " COIN" + (coinAmount == 1 ? "" : "S"), translate.x,5,1,window);
+	    text(to_string(coinAmount) + " COIN" + (coinAmount == 1 ? "                     " : "S"), translate.x,5,1,window);
 
 	    Vector2f menuButton = text("MAIN MENU", translate.x + 200,5,1, window);
 	    if(Mouse::getPosition(window).x >= windowWidth / 2 + 200 && Mouse::getPosition(window).x <= windowWidth / 2 + 200 + menuButton.x && Mouse::getPosition(window).y >= 5 && Mouse::getPosition(window).y <= 5 + menuButton.y) {
