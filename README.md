@@ -1,4 +1,4 @@
-# B. A. A. (Business Achievements Awards) - FBLA_Game
+# B. A. A. (Business Achievements Awards) - FBLA Game
 ## Created by Brian Powell and Logan Bishop in C++ using the SFML library
 
 ## Download Instructions (this only works on mac computers)
