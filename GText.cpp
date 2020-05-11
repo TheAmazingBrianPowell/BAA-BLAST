@@ -1151,7 +1151,7 @@ Vector2f text(String characters, float x, float y, int size2, RenderWindow& wind
     for(int i = 0; i < characters.getSize(); i++) {
 	int greatestPoint = 0;
 	if((int)characters[i] == '/') {
-	    yValue += 22;
+	    yValue += 32;
 	    currentPoint = 0;
 	}else if((int)characters[i] == ' ') {
 	    greatestPoint = 4;
