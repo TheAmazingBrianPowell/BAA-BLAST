@@ -1,14 +1,7 @@
-//TODO: 
+//TODO:
 //Animation for movement
-//Make main menu
-//Make story
-//Make level maps
-//More wall textures
-//Make background texture
 //Make sounds
 //Level Creator?
-//Crates?
-//Disappearing blocks?
 
 
 #include <SFML/Graphics.hpp>
@@ -17,7 +10,6 @@
 #include "CollisionObjects.hpp"
 #include <iostream>
 #include <vector>
-//#include <SFML/Config.hpp>
 #include "GText.hpp"
 #include <math.h>
 #include <sstream>
@@ -370,7 +362,7 @@ int main()
         Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == Event::Closed)
+            if (event.type == Event::Closed || ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)))
             {
                 window.close();
                 break;
